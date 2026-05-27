@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>திருமண அழைப்பிதழ் | பிரதீசன் 💖 சஞ்ஜனா</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Traditional Tamil & English Styles -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arima:wght@400;700&family=Cinzel:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Arima', 'Playfair Display', serif;
+            background-color: #fdfbf7;
+        }
+        .serif-title {
+            font-family: 'Cinzel', serif;
+        }
+        /* Traditional Garland/Marigold pattern style */
+        .garland-border {
+            background-image: radial-gradient(circle, #ff9900 10%, transparent 11%), radial-gradient(circle, #ffcc00 10%, transparent 11%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+        /* Envelope Animation */
+        .envelope-wrapper {
+            perspective: 1000px;
+            transition: all 1s ease-in-out;
+        }
+        .flipped {
+            transform: translateY(-100%) scale(0.9);
+            opacity: 0;
+            pointer-events: none;
+        }
+        /* Glowing text effect */
+        .gold-text {
+            color: #d4af37;
+            text-shadow: 0px 1px 1px rgba(0,0,0,0.1);
+        }
+        /* Flower Petals falling container */
+        #petalContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 30;
+            overflow: hidden;
+        }
+        .petal {
+            position: absolute;
+            background-color: #ffb7c5; /* Pinkish flower petal */
+            border-radius: 150px 0 150px 150px;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% {
+                transform: translate(0, -10px) rotate(0deg);
+            }
+            100% {
+                transform: translate(100px, 100vh) rotate(360deg);
+            }
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #4a0e17;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden text-stone-800">
+
+    <!-- Background Music Element with your custom local file -->
+    <audio id="bgMusic" loop>
+        <source id="musicSource" src="sahilmadan-wedding-invitation-421393.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Falling Petals Container -->
+    <div id="petalContainer"></div>
+
+    <!-- Music Control Floating Group -->
+    <div id="musicControlsGroup" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 items-center hidden">
+        <!-- Settings/Music Select Button -->
+        <button id="musicSelectBtn" onclick="toggleMusicModal()" class="bg-[#fdfbf7] border-2 border-[#d4af37] text-[#4a0e17] w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 animate-pulse" title="இசையை மாற்றுக">
+            <i class="fa-solid fa-sliders text-lg"></i>
+        </button>
+        <!-- Play/Pause Button -->
+        <button id="musicToggle" class="bg-[#4a0e17] border-2 border-[#d4af37] text-[#d4af37] w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300">
+            <i id="musicIcon" class="fa-solid fa-music text-lg"></i>
+        </button>
+    </div>
+
+    <!-- Music Selection Modal -->
+    <div id="musicModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden p-4">
+        <div class="bg-[#fdfbf7] border-4 border-[#d4af37] rounded-xl max-w-sm w-full p-6 text-center shadow-2xl relative">
+            <button onclick="toggleMusicModal()" class="absolute top-2 right-4 text-stone-500 hover:text-stone-800 text-2xl font-bold">&times;</button>
+            
+            <div class="text-[#4a0e17] text-2xl mb-2">🎵</div>
+            <h4 class="text-[#4a0e17] font-bold text-lg mb-4">பின்னணி இசைத் தேர்வு</h4>
+            
+            <div class="space-y-2.5 text-left text-sm">
+                <!-- Selected Custom Track -->
+                <button onclick="changeTrack('sahilmadan-wedding-invitation-421393.mp3', 'சொந்த மங்கள இசை (Default)')" class="w-full text-left p-3 rounded-lg border-2 border-[#d4af37] bg-amber-50/50 flex items-center justify-between transition group">
+                    <span class="font-semibold text-[#4a0e17]">🎵 சொந்த மங்கள இசை (Default)</span>
+                    <i class="fa-solid fa-circle-check text-[#4a0e17]"></i>
+                </button>
+                <!-- Preset Track 1 -->
+                <button onclick="changeTrack('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', 'மங்கள நாதஸ்வரம் (தேர்வு 1)')" class="w-full text-left p-3 rounded-lg border border-stone-200 hover:border-[#d4af37] hover:bg-amber-50/50 flex items-center justify-between transition group">
+                    <span class="font-medium text-stone-800">🎷 மங்கள நாதஸ்வர இசை</span>
+                    <i class="fa-solid fa-circle-play text-stone-400 group-hover:text-[#4a0e17] transition"></i>
+                </button>
+                <!-- Preset Track 2 -->
+                <button onclick="changeTrack('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', 'பக்திப் புல்லாங்குழல் (தேர்வு 2)')" class="w-full text-left p-3 rounded-lg border border-stone-200 hover:border-[#d4af37] hover:bg-amber-50/50 flex items-center justify-between transition group">
+                    <span class="font-medium text-stone-800">🪈 பக்திப் புல்லாங்குழல் இசை</span>
+                    <i class="fa-solid fa-circle-play text-stone-400 group-hover:text-[#4a0e17] transition"></i>
+                </button>
+                <!-- Preset Track 3 -->
+                <button onclick="changeTrack('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3', 'தெய்வீக வீணை இசை (தேர்வு 3)')" class="w-full text-left p-3 rounded-lg border border-stone-200 hover:border-[#d4af37] hover:bg-amber-50/50 flex items-center justify-between transition group">
+                    <span class="font-medium text-stone-800">🎻 தெய்வீக வீணை இசை</span>
+                    <i class="fa-solid fa-circle-play text-stone-400 group-hover:text-[#4a0e17] transition"></i>
+                </button>
+
+                <!-- Custom Music Option -->
+                <div class="pt-3 border-t border-dashed border-stone-200">
+                    <label class="block text-xs font-bold text-stone-600 mb-1">உங்களது சொந்த மியூசிக் கோப்பு / லிங்க் (MP3):</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="customMusicUrl" placeholder="உதா: music.mp3 அல்லது இணைய முகவரி" class="flex-1 px-3 py-1.5 border border-stone-300 rounded-lg text-xs focus:ring-1 focus:ring-[#4a0e17] focus:outline-none">
+                        <button onclick="loadCustomMusic()" class="bg-[#4a0e17] text-[#d4af37] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#320a0f] transition">இணைக்கவும்</button>
+                    </div>
+                    <p class="text-[10px] text-stone-400 mt-1 leading-normal">குறிப்பு: உங்கள் மொபைல்/கணினியில் உள்ள MP3 பாடலைப் பயன்படுத்த, இந்த HTML கோப்பு உள்ள அதே இடத்தில் பாடலைச் சேமித்துவிட்டு, அதன் பெயரை இங்கு டைப் செய்யவும்.</p>
+                </div>
+            </div>
+            
+            <p id="currentTrackDisplay" class="text-xs text-[#4a0e17] font-semibold mt-4 text-center bg-amber-50 py-2 px-3 rounded border border-[#d4af37]/30">தற்போதைய இசை: சொந்த மங்கள இசை (Default)</p>
+        </div>
+    </div>
+
+    <!-- 1. ENVELOPE SCREEN (அழைப்பிதழ் உறை) -->
+    <div id="envelopeScreen" class="fixed inset-0 z-40 flex items-center justify-center bg-[#4a0e17] p-4 transition-all duration-1000 ease-in-out">
+        <div class="max-w-md w-full bg-[#fdfbf7] rounded-xl border-4 border-[#d4af37] p-8 text-center shadow-2xl relative overflow-hidden flex flex-col items-center justify-between min-h-[500px]">
+            <!-- Traditional Corners -->
+            <div class="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-[#d4af37] rounded-tl-lg m-2"></div>
+            <div class="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-[#d4af37] rounded-tr-lg m-2"></div>
+            <div class="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-[#d4af37] rounded-bl-lg m-2"></div>
+            <div class="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-[#d4af37] rounded-br-lg m-2"></div>
+
+            <!-- Ganesha Icon -->
+            <div class="text-[#4a0e17] text-4xl mt-6 animate-bounce">
+                🕉️
+            </div>
+
+            <!-- Envelope Content -->
+            <div class="my-auto">
+                <p class="text-sm tracking-widest text-[#d4af37] font-bold uppercase mb-2">சுபமஸ்து</p>
+                <h1 class="text-2xl font-bold text-[#4a0e17] mb-4">திருமண அழைப்பிதழ்</h1>
+                
+                <!-- Couple Names Logo -->
+                <div class="inline-flex items-center justify-center gap-3 bg-[#4a0e17] text-[#fdfbf7] py-2 px-6 rounded-full border border-[#d4af37] shadow-md my-4">
+                    <span class="font-bold tracking-wider">பிரதீசன்</span>
+                    <i class="fa-solid fa-heart text-red-500 animate-pulse"></i>
+                    <span class="font-bold tracking-wider">சஞ்ஜனா</span>
+                </div>
+                
+                <p class="text-stone-600 text-xs mt-4">தங்கள் நல்வரவை விரும்பும்</p>
+                <p class="text-stone-800 font-bold text-sm">செல்வராசா & தேவராஜா குடும்பத்தினர்</p>
+            </div>
+
+            <!-- Open Button -->
+            <button onclick="openInvitation()" class="bg-[#4a0e17] text-[#d4af37] border-2 border-[#d4af37] px-8 py-3 rounded-full font-bold shadow-lg hover:bg-[#d4af37] hover:text-[#4a0e17] transition duration-300 transform hover:scale-105 mb-4 z-10 flex items-center gap-2">
+                <i class="fa-solid fa-envelope-open-text"></i> அழைப்பிதழைத் திறக்கவும்
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. MAIN WEDDING CARD CONTENT -->
+    <div id="mainContent" class="hidden opacity-0 transition-opacity duration-1000 max-w-lg mx-auto bg-[#fdfbf7] min-h-screen shadow-2xl relative pb-20 border-x-4 border-[#4a0e17]">
+        
+        <!-- Hanging Leaves Deco (மாவிலை தோரணம்) -->
+        <div class="w-full bg-[#4a0e17] py-1 text-center text-xs text-[#d4af37] tracking-widest flex justify-around">
+            <span>🍃</span><span>🍃</span><span>🍃</span><span>🍃</span><span>🍃</span><span>🍃</span><span>🍃</span><span>🍃</span><span>🍃</span>
+        </div>
+
+        <!-- Top Header Banner -->
+        <div class="text-center pt-8 px-6">
+            <span class="text-2xl text-[#4a0e17] font-bold">🕉️ ஓம் ஸ்ரீ விநாயகாய நமஃ 🕉️</span>
+            <div class="w-24 h-0.5 bg-[#d4af37] mx-auto my-3"></div>
+            <h2 class="text-3xl font-extrabold text-[#4a0e17] serif-title uppercase tracking-widest mt-2">திருமண அழைப்பிதழ்</h2>
+        </div>
+
+        <!-- Thirukkural Quote Card -->
+        <div class="mx-6 my-6 bg-amber-50/50 border border-amber-200 rounded-lg p-5 text-center italic relative">
+            <span class="absolute top-1 left-2 text-2xl text-amber-300">“</span>
+            <p class="text-[#4a0e17] font-medium leading-relaxed px-4">
+                அன்பும் அறனும் உடைத்தாயின் இல்வாழ்க்கையில்<br>
+                பண்பும் பயனும் அஃது.
+            </p>
+            <span class="absolute bottom-1 right-2 text-2xl text-amber-300">”</span>
+        </div>
+
+        <!-- Welcoming Statement -->
+        <div class="px-8 text-center my-6">
+            <p class="text-[#4a0e17] font-semibold text-lg mb-2">அன்புடையீர்,</p>
+            <p class="text-stone-700 leading-relaxed text-sm">
+                இறைவன் திருவருள் துணைகொண்டு, பெரியோர் ஆசிர்வாதத்துடன் நடைபெறும் எங்கள் இல்ல சுபமுகூர்த்த திருமண வைபவத்திற்கு தாங்கள் தங்கள் குடும்பத்தினருடன் வருகை தந்து மணமக்களை வாழ்த்தி அருளுமாறு அன்புடன் அழைக்கின்றோம்.
+            </p>
+        </div>
+
+        <!-- Couple Display Section -->
+        <div class="my-8 px-6 relative">
+            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                <div class="w-full border-t border-dashed border-[#d4af37]"></div>
+            </div>
+            <div class="relative flex justify-center">
+                <span class="bg-[#fdfbf7] px-4 text-sm font-bold tracking-widest text-[#d4af37] uppercase">மணமக்கள்</span>
+            </div>
+        </div>
+
+        <!-- Groom Card -->
+        <div class="mx-6 bg-gradient-to-b from-amber-50 to-white border-2 border-[#d4af37] rounded-xl p-6 text-center shadow-md relative overflow-hidden mb-6">
+            <div class="absolute -top-6 -right-6 w-12 h-12 bg-[#4a0e17] rotate-45"></div>
+            <span class="text-[#4a0e17] text-xs font-bold uppercase tracking-wider block mb-1">திருநிறைச்செல்வன்</span>
+            <h3 class="text-2xl font-extrabold text-[#4a0e17] my-2">செ. பிரதீசன்</h3>
+            <p class="text-xs text-stone-600 mt-2">
+                <strong class="text-stone-800">திரு. சி. செல்வராசா – திருமதி. ஜெ. விமலாவதி</strong><br>தம்பதிகளின் புதல்வன்
+            </p>
+        </div>
+
+        <!-- Heart Icon transition -->
+        <div class="flex justify-center items-center my-4 animate-pulse">
+            <div class="w-12 h-[1px] bg-[#d4af37]"></div>
+            <i class="fa-solid fa-heart text-2xl text-red-600 mx-4"></i>
+            <div class="w-12 h-[1px] bg-[#d4af37]"></div>
+        </div>
+
+        <!-- Bride Card -->
+        <div class="mx-6 bg-gradient-to-b from-amber-50 to-white border-2 border-[#d4af37] rounded-xl p-6 text-center shadow-md relative overflow-hidden mb-8">
+            <div class="absolute -top-6 -left-6 w-12 h-12 bg-[#4a0e17] -rotate-45"></div>
+            <span class="text-[#4a0e17] text-xs font-bold uppercase tracking-wider block mb-1">திருநிறைச்செல்வி</span>
+            <h3 class="text-2xl font-extrabold text-[#4a0e17] my-2">தே. சஞ்ஜனா</h3>
+            <p class="text-xs text-stone-600 mt-2">
+                <strong class="text-stone-800">திரு. க. தேவராஜா – திருமதி. க. லெட்சுமி</strong><br>தம்பதிகளின் புதல்வி
+            </p>
+        </div>
+
+        <!-- Muhurtham Section -->
+        <div class="bg-[#4a0e17] text-[#fdfbf7] py-8 px-6 text-center border-y-4 border-[#d4af37]">
+            <h4 class="text-xl font-bold text-[#d4af37] mb-4 tracking-wider"><i class="fa-solid fa-calendar-days mr-2"></i> சுபமுகூர்த்த நாள் & நேரம்</h4>
+            
+            <div class="space-y-4 text-sm max-w-sm mx-auto">
+                <div class="bg-black/20 p-3 rounded-lg border border-[#d4af37]/30">
+                    <p class="text-[#d4af37] text-xs uppercase font-bold">சுப முகூர்த்த தேதி</p>
+                    <p class="text-lg font-bold mt-1">18.06.2026</p>
+                    <p class="text-xs text-amber-100">(வியாழக்கிழமை)</p>
+                </div>
+
+                <div class="bg-black/20 p-3 rounded-lg border border-[#d4af37]/30">
+                    <p class="text-[#d4af37] text-xs uppercase font-bold">தமிழ் தேதி</p>
+                    <p class="font-bold mt-1">பராபவ வருடம், ஆனி மாதம் 4 ஆம் நாள்</p>
+                </div>
+
+                <div class="bg-black/20 p-3 rounded-lg border border-[#d4af37]/30">
+                    <p class="text-[#d4af37] text-xs uppercase font-bold">சுப முகூர்த்த நேரம்</p>
+                    <p class="text-lg font-bold mt-1">முற்பகல் 10.30 மணி முதல் 11.30 மணி வரை</p>
+                </div>
+
+                <div class="bg-black/20 p-3 rounded-lg border border-[#d4af37]/30">
+                    <p class="text-[#d4af37] text-xs uppercase font-bold">திதி & நட்சத்திரம்</p>
+                    <p class="text-xs leading-relaxed mt-1">சுக்ல பட்சம் துதியை திதியும், புனர்பூசம் நட்சத்திரமும் கூடிய சுபயோக சுபவேளை</p>
+                </div>
+            </div>
+
+            <!-- Add to Calendar Button -->
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=%E0%AE%AA%E0%AE%B0%E0%AE%A0%E0%AF%80%E0%AE%9A%E0%AE%A9%E0%AF%8D+%E2%9D%A4+%E0%AE%9A%E0%AE%9E%E0%AF%8D%E0%AE%9B%E0%AE%A9%E0%AE%BE+%E0%AE%A4%E0%AE%BF%E0%AE%B0%E0%AF%81%E0%AE%AE%E0%AE%A3%E0%AE%AE%E0%AF%8D&dates=20260618T050000Z/20260618T063000Z&details=%E0%AE%AA%E0%AE%B0%E0%AE%A0%E0%AF%80%E0%AE%9A%E0%AE%A9%E0%AF%8D+%E0%AE%AE%E0%AE%B1%E0%AF%8D%E0%AE%B1%E0%AF%81%E0%AE%AE%E0%AF%8D+%E0%AE%9A%E0%AE%9E%E0%AF%8D%E0%AE%9B%E0%AE%A9%E0%AE%BE%E0%AE%B5%E0%AE%BF%E0%AE%A9%E0%AF%8D+%E0%AE%A4%E0%AE%BF%E0%AE%B0%E0%AF%81%E0%AE%AE%E0%AE%A3+%E0%AE%B5%E0%AF%88%E0%AE%B5%E0%AE%AE%E0%AF%8D.+%E0%AE%A4%E0%AE%BE%E0%AE%99%E0%AF%8D%E0%AE%95%E0%AE%B3%E0%AF%8D+%E0%AE%95%E0%AF%81%E0%AE%9Border%E0%AF%81%E0%AE%A4%E0%AF%8D%E0%AE%A4%E0%AE%BF%E0%AE%A9%E0%AE%B0%E0%AF%81%E0%AE%9F%E0%AE%A9%E0%AF%8D+%E0%AE%B5%E0%AE%B0%E0%AF%81%E0%AE%95%E0%AF%88+%E0%AE%A4%E0%AE%B0%E0%AF%81%E0%AE%AE%E0%AE%AE%E0%AF%8D.&location=%E0%AE%9A%E0%AE%A9%E0%AE%9A%E0%AE%AE%E0%AF%82%E0%AE%95+%E0%AE%A8%E0%AE%BF%E0%AE%B2%E0%AE%AF%E0%AE%AE%E0%AF%8D,+3%E0%AE%AE%E0%AF%8D+%E0%AE%95%E0%AF%81%E0%AE%B1%E0%AF%81%E0%AE%9B%E0%AF%8D%E0%AE%95%E0%AF%81+%E0%AE%B5%E0%AF%82%E0%AE%A4%E0%AF%8D%E0%AE%B5%E0%AF%81,+%E0%AE%85%E0%AE%95%E0%AF%8D%E0%AE%95%E0%AE%B0%E0%AF%8D%E0%AE%AA%E0%AF%8D%E0%AE%AA%E0%AE%B1%E0%AF%8D%E0%AE%B1%E0%AF%81+8/3" target="_blank" class="mt-6 inline-flex items-center gap-2 bg-[#d4af37] text-[#4a0e17] px-5 py-2 rounded-full font-bold text-xs shadow-md hover:bg-[#fdfbf7] transition">
+                <i class="fa-regular fa-clock"></i> கூகுள் காலண்டரில் சேமிக்க
+            </a>
+        </div>
+
+        <!-- Live Countdown Timer -->
+        <div class="my-8 px-6 text-center">
+            <h5 class="text-xs uppercase font-bold tracking-widest text-stone-500 mb-3">திருமண நாளுக்கான கவுண்ட்டவுன்</h5>
+            <div class="grid grid-cols-4 gap-2 max-w-sm mx-auto">
+                <div class="bg-[#f2efe9] rounded-lg p-3 border border-[#d4af37]/30">
+                    <span id="days" class="block text-2xl font-bold text-[#4a0e17]">00</span>
+                    <span class="text-[10px] text-stone-500 uppercase">நாட்கள்</span>
+                </div>
+                <div class="bg-[#f2efe9] rounded-lg p-3 border border-[#d4af37]/30">
+                    <span id="hours" class="block text-2xl font-bold text-[#4a0e17]">00</span>
+                    <span class="text-[10px] text-stone-500 uppercase">மணி</span>
+                </div>
+                <div class="bg-[#f2efe9] rounded-lg p-3 border border-[#d4af37]/30">
+                    <span id="minutes" class="block text-2xl font-bold text-[#4a0e17]">00</span>
+                    <span class="text-[10px] text-stone-500 uppercase">நிமிடம்</span>
+                </div>
+                <div class="bg-[#f2efe9] rounded-lg p-3 border border-[#d4af37]/30">
+                    <span id="seconds" class="block text-2xl font-bold text-[#4a0e17]">00</span>
+                    <span class="text-[10px] text-stone-500 uppercase">நொடி</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Venue & Feast -->
+        <div class="mx-6 bg-[#fdfbf7] border-2 border-[#4a0e17] rounded-xl overflow-hidden shadow-md mb-8">
+            <div class="bg-[#4a0e17] py-3 text-center">
+                <h4 class="text-lg font-bold text-[#d4af37]"><i class="fa-solid fa-map-location-dot mr-2"></i> திருமண இடம் & விருந்துபசாரம்</h4>
+            </div>
+            
+            <div class="p-6 text-center space-y-4">
+                <div class="text-[#4a0e17] text-3xl">
+                    🏢
+                </div>
+                <div>
+                    <h5 class="font-bold text-lg text-stone-800">சனசமூக நிலையம்</h5>
+                    <p class="text-sm text-stone-600 mt-1">3ம் குறுக்கு வீதி, அக்கரைப்பற்று 8/3</p>
+                </div>
+                
+                <p class="text-xs text-[#4a0e17] font-semibold bg-amber-50 py-2 px-4 rounded-lg border border-[#d4af37]">
+                    🍽️ திருமண வைபவத்தைத் தொடர்ந்து மதிய மங்கள விருந்துபசாரம் அதே இடத்தில் இடம்பெறும்.
+                </p>
+
+                <!-- Google Maps Link -->
+                <a href="https://www.google.com/maps/search/?api=1&query=Sanasamuga+Nilayam,+3rd+Cross+Street,+Akkaraipattu" target="_blank" class="inline-flex items-center gap-2 bg-[#4a0e17] text-[#d4af37] px-6 py-3 rounded-full font-bold text-sm shadow-md hover:bg-[#d4af37] hover:text-[#4a0e17] transition w-full justify-center">
+                    <i class="fa-solid fa-compass"></i> கூகுள் மேப் வழித்தடம்
+                </a>
+            </div>
+        </div>
+
+        <!-- RSVP Form (interactive Confirmation via WhatsApp) -->
+        <div class="mx-6 bg-amber-50/40 border-2 border-dashed border-[#d4af37] rounded-xl p-6 mb-8">
+            <h4 class="text-center font-bold text-[#4a0e17] text-lg mb-2">📩 வருகையை உறுதிப்படுத்துங்கள் (RSVP)</h4>
+            <p class="text-center text-xs text-stone-500 mb-4">நீங்கள் திருமணத்தில் கலந்து கொள்வதை மணமக்களுக்கு வாட்ஸ்அப் மூலம் உடனடியாகத் தெரிவிக்கவும்.</p>
+            
+            <div class="space-y-3 text-sm">
+                <div>
+                    <label class="block text-xs font-bold text-stone-700 mb-1">உங்கள் பெயர்:</label>
+                    <input type="text" id="rsvpName" placeholder="பெயரை உள்ளிடவும்" class="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#4a0e17]">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-stone-700 mb-1">வருகை தரும் நபர்களின் எண்ணிக்கை:</label>
+                    <select id="rsvpCount" class="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#4a0e17]">
+                        <option value="1">1 நபர்</option>
+                        <option value="2">2 நபர்கள்</option>
+                        <option value="3">3 நபர்கள்</option>
+                        <option value="4">4 நபர்கள்</option>
+                        <option value="5+">5+ நபர்கள்</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-stone-700 mb-1">வாழ்த்துகள் / செய்தி:</label>
+                    <textarea id="rsvpMessage" rows="2" placeholder="உங்களது வாழ்த்துக்களை எழுதுங்கள்" class="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#4a0e17]"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button onclick="sendRSVP('groom')" class="bg-[#4a0e17] text-white px-3 py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-[#320a0f] transition">
+                        <i class="fa-brands fa-whatsapp text-sm text-green-400"></i> மணமகன் வீட்டாருக்கு
+                    </button>
+                    <button onclick="sendRSVP('bride')" class="bg-[#4a0e17] text-white px-3 py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-[#320a0f] transition">
+                        <i class="fa-brands fa-whatsapp text-sm text-green-400"></i> மணமகள் வீட்டாருக்கு
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Invitation Host Details -->
+        <div class="text-center px-6 mt-10">
+            <p class="text-xs uppercase font-bold text-[#d4af37] tracking-widest">இவ்வண்ணம்</p>
+            <div class="w-12 h-0.5 bg-[#d4af37] mx-auto my-2"></div>
+            
+            <div class="space-y-2 text-stone-800 text-sm font-semibold">
+                <p>திரு. சி. செல்வராசா, திருமதி. ஜெ. விமலாவதி (மணமகன் பெற்றோர்)</p>
+                <p class="text-xs text-[#d4af37] font-bold">&</p>
+                <p>திரு. க. தேவராஜா, திருமதி. க. லெட்சுமி (மணமகள் பெற்றோர்)</p>
+                <p class="text-xs text-stone-500">மற்றும் குடும்பத்தினர்</p>
+            </div>
+
+            <p class="text-[#4a0e17] font-bold text-base italic mt-6">"தங்கள் நல்வரவை இனிதே விரும்பும்..."</p>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="mt-10 mx-6 border-t border-[#d4af37] pt-8 text-center">
+            <h5 class="text-xs uppercase font-bold tracking-widest text-stone-500 mb-4"><i class="fa-solid fa-phone mr-1"></i> தொடர்புகளுக்கு</h5>
+            <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                <a href="tel:+94772059848" class="flex flex-col items-center p-3 bg-amber-50/50 rounded-xl border border-amber-100 hover:bg-amber-100/50 transition">
+                    <span class="text-xs text-stone-500 mb-1">மணமகன் குடும்பம்</span>
+                    <span class="text-sm font-bold text-[#4a0e17]">+94 77 205 9848</span>
+                </a>
+                <a href="tel:+94768622403" class="flex flex-col items-center p-3 bg-amber-50/50 rounded-xl border border-amber-100 hover:bg-amber-100/50 transition">
+                    <span class="text-xs text-stone-500 mb-1">மணமகள் குடும்பம்</span>
+                    <span class="text-sm font-bold text-[#4a0e17]">+94 76 862 2403</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Open Envelope Function
+        function openInvitation() {
+            const envelope = document.getElementById('envelopeScreen');
+            const mainContent = document.getElementById('mainContent');
+            const musicGroup = document.getElementById('musicControlsGroup');
+            const music = document.getElementById('bgMusic');
+
+            // Play background music (Modern browsers block auto-play until user gesture)
+            music.play().then(() => {
+                document.getElementById('musicIcon').className = "fa-solid fa-pause text-lg";
+            }).catch(error => {
+                console.log("Audio play blocked by browser. User must click play button manually.");
+            });
+
+            // Slide up and hide envelope
+            envelope.classList.add('flipped');
+            
+            // Show main card content with transition
+            setTimeout(() => {
+                envelope.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                setTimeout(() => {
+                    mainContent.classList.add('opacity-100');
+                    musicGroup.classList.remove('hidden');
+                    startFlowerRain(); // Start traditional flower petal animation on load
+                }, 50);
+            }, 600);
+        }
+
+        // Music Play/Pause Toggle
+        const music = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicIcon = document.getElementById('musicIcon');
+
+        musicToggle.addEventListener('click', () => {
+            if (music.paused) {
+                music.play();
+                musicIcon.className = "fa-solid fa-pause text-lg";
+            } else {
+                music.pause();
+                musicIcon.className = "fa-solid fa-music text-lg";
+            }
+        });
+
+        // Music Settings Modal Toggle
+        function toggleMusicModal() {
+            const modal = document.getElementById('musicModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // Change Track Function
+        function changeTrack(url, trackName) {
+            const audio = document.getElementById('bgMusic');
+            const isPlaying = !audio.paused;
+            
+            audio.src = url;
+            audio.load();
+            
+            document.getElementById('currentTrackDisplay').innerText = `தற்போதைய இசை: ${trackName}`;
+            
+            if (isPlaying) {
+                audio.play().then(() => {
+                    document.getElementById('musicIcon').className = "fa-solid fa-pause text-lg";
+                });
+            } else {
+                document.getElementById('musicIcon').className = "fa-solid fa-music text-lg";
+            }
+        }
+
+        // Load Custom User Music
+        function loadCustomMusic() {
+            const customUrl = document.getElementById('customMusicUrl').value.trim();
+            if (!customUrl) {
+                alert("தயவுசெய்து சரியான MP3 முகவரி அல்லது கோப்பின் பெயரை உள்ளிடவும்!");
+                return;
+            }
+            changeTrack(customUrl, "சொந்த இசை (Custom Track)");
+            toggleMusicModal();
+        }
+
+        // Traditional Flower Rain (Petals Falling Animation) logic
+        function startFlowerRain() {
+            const container = document.getElementById('petalContainer');
+            const colors = ['#ffb7c5', '#ff9999', '#ffe5ec', '#ffccd5']; // Soft rose & pink colors
+            
+            setInterval(() => {
+                if (document.hidden) return; // Pause creating when page is not active
+                
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                
+                // Random position & speed properties
+                const size = Math.random() * 12 + 8;
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size}px`;
+                petal.style.left = `${Math.random() * 100}vw`;
+                petal.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const duration = Math.random() * 5 + 5; // Between 5s and 10s
+                petal.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(petal);
+                
+                // Remove petal after animation completes to avoid memory leak
+                setTimeout(() => {
+                    petal.remove();
+                }, duration * 1000);
+            }, 300);
+        }
+
+        // Wedding Countdown Timer
+        const targetDate = new Date("June 18, 2026 10:30:00").getTime();
+
+        const countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            // Calculations for days, hours, minutes and seconds
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            // Display results
+            document.getElementById("days").innerText = d < 10 ? "0" + d : d;
+            document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
+            document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
+            document.getElementById("seconds").innerText = s < 10 ? "0" + s : s;
+
+            // If countdown is over
+            if (difference < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+            }
+        }, 1000);
+
+        // RSVP WhatsApp Sender Function
+        function sendRSVP(family) {
+            const name = document.getElementById('rsvpName').value.trim();
+            const count = document.getElementById('rsvpCount').value;
+            const userMsg = document.getElementById('rsvpMessage').value.trim();
+            
+            if (!name) {
+                alert("தயவுசெய்து உங்கள் பெயரை உள்ளிடவும்!");
+                return;
+            }
+
+            // Target phone numbers (with country code +94)
+            const groomPhone = "94772059848";
+            const bridePhone = "94768622403";
+            const targetPhone = (family === 'groom') ? groomPhone : bridePhone;
+
+            // Crafting message
+            let message = "வணக்கம்! 🌸\n";
+            message += "நான் *" + name + "*.\n";
+            message += "பிரதீசன் 💖 சஞ்ஜனா திருமண வைபவத்தில் நாம் மகிழ்ச்சியுடன் கலந்து கொள்கிறோம். 🎉\n\n";
+            message += "• வருகை தரும் நபர்கள்: *" + count + "*\n";
+            if (userMsg) {
+                message += "• வாழ்த்துச் செய்தி: \"" + userMsg + "\"\n";
+            }
+            message += "\nநன்றி! 🙏";
+
+            // Encoding and Redirecting to WhatsApp
+            const encodedMessage = encodeURIComponent(message);
+            window.open("https://api.whatsapp.com/send?phone=" + targetPhone + "&text=" + encodedMessage, '_blank');
+        }
+    </script>
+</body>
+</html>
