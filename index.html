@@ -536,19 +536,20 @@ style="position: relative; z-index: 10;">
 
 <form id="rsvpForm" class="space-y-4 mt-6">
 
-    <input type="text" placeholder="உங்கள் பெயர்"
+    <input type="text" id="rsvpName" placeholder="உங்கள் பெயர்"
         class="w-full border rounded-xl p-3">
 
-    <input type="number" placeholder="வருபவர்கள் எண்ணிக்கை"
+    <input type="number" id="rsvpCount" placeholder="வருபவர்கள் எண்ணிக்கை"
         class="w-full border rounded-xl p-3">
 
-    <textarea placeholder="வாழ்த்து செய்தி"
+    <textarea id="rsvpMessage" placeholder="வாழ்த்து செய்தி"
         class="w-full border rounded-xl p-3"></textarea>
 
-    <button type="submit"
-        class="w-full bg-[#4a0e17] text-[#d4af37] py-3 rounded-xl font-bold">
-        RSVP அனுப்பவும்
-    </button>
+        <button type="button"
+            onclick="sendRSVP('groom')"
+            class="w-full bg-[#4a0e17] text-[#d4af37] py-3 rounded-xl font-bold">
+            RSVP அனுப்பவும்
+        </button>
 
 </form>
 
@@ -563,7 +564,7 @@ style="position: relative; z-index: 10;">
 
             <div class="grid grid-cols-2 gap-4 mt-7">
 
-                <a href="tel:+94772059848"
+                <a href="tel:+94766609009"
                     class="bg-amber-50 p-5 rounded-2xl border shadow hover:scale-105 transition">
 
                     <p class="text-xs text-stone-500">
@@ -576,7 +577,7 @@ style="position: relative; z-index: 10;">
 
                 </a>
 
-                <a href="tel:+94768622403"
+                <a href="tel:+94762964481"
                     class="bg-amber-50 p-5 rounded-2xl border shadow hover:scale-105 transition">
 
                     <p class="text-xs text-stone-500">
@@ -584,7 +585,7 @@ style="position: relative; z-index: 10;">
                     </p>
 
                     <p class="font-bold text-[#4a0e17] mt-3">
-                        +94 76 862 2403
+                        +94 76 296 4481
                     </p>
 
                 </a>
@@ -612,19 +613,40 @@ style="position: relative; z-index: 10;">
     <!-- SCRIPT -->
 
     <script>
-document
-.getElementById("rsvpForm")
-.addEventListener("submit",function(e){
+function sendRSVP(family) {
 
-    e.preventDefault();
+    const name = document.getElementById('rsvpName').value.trim();
+    const count = document.getElementById('rsvpCount').value;
+    const userMsg = document.getElementById('rsvpMessage').value.trim();
 
-    alert(
-        "உங்கள் RSVP வெற்றிகரமாக பெறப்பட்டது. நன்றி!"
+    if (!name) {
+        alert("தயவுசெய்து உங்கள் பெயரை உள்ளிடவும்!");
+        return;
+    }
+
+    const groomPhone = "94776609009";
+    const bridePhone = "94762964481";
+
+    const targetPhone = family === 'groom' ? groomPhone : bridePhone;
+
+    let message = `வணக்கம்! 🌸\n`;
+    message += `நான் *${name}*.\n`;
+    message += `பிரதீசன் 💖 சஞ்ஜனா திருமணத்தில் கலந்து கொள்கிறோம் 🎉\n\n`;
+    message += `• வருகை தரும் நபர்கள்: *${count || 1}*\n`;
+
+    if (userMsg) {
+        message += `• வாழ்த்து செய்தி: "${userMsg}"\n`;
+    }
+
+    message += `\nநன்றி! 🙏`;
+
+    const encodedMessage = encodeURIComponent(message);
+
+    window.open(
+        `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodedMessage}`,
+        '_blank'
     );
-
-    this.reset();
-
-});
+}
         // LOADER
 
         window.addEventListener('load', () => {
