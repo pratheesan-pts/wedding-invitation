@@ -1,5 +1,916 @@
 <!DOCTYPE html>
 <html lang="ta">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>திருமண அழைப்பிதழ் | பிரதீசன் 💖 சஞ்ஜனா</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Arima:wght@400;700&family=Cinzel:wght@500;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Arima', 'Playfair Display', serif;
+            background: linear-gradient(to bottom, #fffaf2, #fdfbf7);
+            overflow-x: hidden;
+        }
+
+        .serif-title {
+            font-family: 'Cinzel', serif;
+        }
+
+        .premium-card {
+            backdrop-filter: blur(10px);
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.18),
+                0 0 20px rgba(212, 175, 55, 0.15);
+        }
+
+        .gold-glow {
+            color: #d4af37;
+            text-shadow:
+                0 0 5px rgba(212, 175, 55, 0.5),
+                0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .flipped {
+            transform:
+                translateY(-120%)
+                rotateX(20deg)
+                scale(0.8);
+
+            opacity: 0;
+
+            transition: all 1s ease;
+        }
+
+        .fade-up {
+            animation: fadeUp 1s ease forwards;
+        }
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* PETALS */
+
+        #petalContainer {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 30;
+        }
+
+        .petal {
+            position: absolute;
+            border-radius: 150px 0 150px 150px;
+            opacity: 0.8;
+            will-change: transform;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+
+            0% {
+                transform:
+                    translate3d(0, -10vh, 0) rotate(0deg);
+            }
+
+            100% {
+                transform:
+                    translate3d(120px, 110vh, 0) rotate(360deg);
+            }
+        }
+
+        /* SCROLLBAR */
+
+        ::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #3b0911;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 10px;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+        }
+        .bell{
+    display:inline-block;
+    animation:ring 2s infinite ease-in-out;
+    transform-origin:top center;
+}
+#fireworks{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:1;
+}
+
+@keyframes ring{
+    0%{transform:rotate(0deg);}
+    25%{transform:rotate(15deg);}
+    50%{transform:rotate(-15deg);}
+    75%{transform:rotate(10deg);}
+    100%{transform:rotate(0deg);}
+}
+    </style>
+</head>
+
+<body class="text-stone-800">
+
+<canvas id="fireworks"></canvas>
+    <div id="welcomePopup"
+class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-5">
+
+    <div class="bg-white rounded-3xl p-8 text-center max-w-sm shadow-2xl">
+
+        <div class="text-5xl mb-4">💖</div>
+
+        <h2 class="text-2xl font-bold text-[#4a0e17]">
+            வருக வருக
+        </h2>
+
+        <p class="mt-4 text-stone-600">
+            எங்கள் திருமண விழாவிற்கு தங்களை அன்புடன் வரவேற்கிறோம்.
+        </p>
+
+        <button onclick="closePopup()"
+        class="mt-6 bg-[#4a0e17] text-[#d4af37] px-6 py-3 rounded-full">
+
+            தொடரவும்
+
+        </button>
+
+    </div>
+
+</div>
+
+    <!-- LOADER -->
+
+    <div id="loader"
+        class="fixed inset-0 bg-[#4a0e17] z-[999] flex items-center justify-center">
+
+        <div class="text-center">
+
+            <div class="text-6xl animate-pulse">
+                💍
+            </div>
+
+            <p class="text-[#d4af37] mt-5 tracking-[6px] text-sm">
+                LOADING INVITATION
+            </p>
+
+        </div>
+
+    </div>
+    <!-- AUDIO -->
+
+    <audio id="bgMusic" loop>
+        <source src="sahilmadan-wedding-invitation-421393.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- FLOWERS -->
+
+    <div id="petalContainer"></div>
+
+    <!-- ENVELOPE -->
+
+    <div id="envelopeScreen"
+        class="fixed inset-0 z-40 flex items-center justify-center bg-[#4a0e17] p-4 transition-all duration-1000">
+
+        <div class="premium-card max-w-md w-full bg-[#fdfbf7] rounded-2xl border-4 border-[#d4af37] p-8 text-center relative overflow-hidden min-h-[520px] flex flex-col justify-between">
+
+            <!-- CORNERS -->
+
+            <div class="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-[#d4af37] rounded-tl-lg m-2"></div>
+            <div class="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-[#d4af37] rounded-tr-lg m-2"></div>
+            <div class="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-[#d4af37] rounded-bl-lg m-2"></div>
+            <div class="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-[#d4af37] rounded-br-lg m-2"></div>
+
+            <!-- ICON -->
+
+            <div class="flex justify-center gap-8 text-4xl text-[#d4af37] mb-4">
+            <span class="bell">🔔</span>
+            <div class="float-animation">
+                🕉️
+            </div>
+            <span class="bell">🔔</span>
+            </div>
+
+            <!-- CONTENT -->
+
+            <div>
+
+                <p class="text-sm uppercase tracking-[5px] gold-glow font-bold">
+                    சுபமஸ்து
+                </p>
+
+                <h1 class="text-4xl font-bold text-[#4a0e17] mt-5">
+                    திருமண அழைப்பிதழ்
+                </h1>
+
+                <div class="inline-flex items-center gap-3 bg-[#4a0e17] text-white px-7 py-3 rounded-full mt-8 border border-[#d4af37] shadow-xl">
+
+                    <span class="font-bold tracking-wider">பிரதீசன்</span>
+
+                    <i class="fa-solid fa-heart text-red-500 animate-pulse"></i>
+
+                    <span class="font-bold tracking-wider">சஞ்ஜனா</span>
+
+                </div>
+
+                <p class="text-stone-600 text-sm mt-7">
+                    தங்கள் நல்வரவை விரும்பும்
+                </p>
+
+                <p class="font-bold text-[#4a0e17] mt-2">
+                    செல்வராசா & தேவராஜா குடும்பத்தினர்
+                </p>
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button onclick="openInvitation()"
+                class="bg-[#4a0e17] text-[#d4af37] border-2 border-[#d4af37] px-8 py-4 rounded-full font-bold hover:bg-[#d4af37] hover:text-[#4a0e17] transition duration-300 flex items-center justify-center gap-3 shadow-xl hover:scale-105">
+
+                <i class="fa-solid fa-envelope-open-text"></i>
+
+                அழைப்பிதழைத் திறக்கவும்
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+
+<div id="mainContent"
+class="hidden opacity-0 transition-all duration-1000 transform translate-y-10 max-w-lg mx-auto bg-[#fdfbf7] min-h-screen shadow-2xl border-x-4 border-[#4a0e17] pb-20"
+style="position: relative; z-index: 10;">
+
+        <!-- TOP LEAF -->
+
+        <div class="w-full bg-[#4a0e17] py-2 flex justify-around text-[#d4af37] text-sm">
+            <span>🍃</span>
+            <span>🍃</span>
+            <span>🍃</span>
+            <span>🍃</span>
+            <span>🍃</span>
+            <span>🍃</span>
+            <span>🍃</span>
+        </div>
+
+        <!-- HEADER -->
+
+        <div class="text-center pt-10 px-6 fade-up">
+
+            <div class="text-3xl mb-4 float-animation">
+                🕉️
+            </div>
+
+            <h2 class="text-4xl serif-title font-bold text-[#4a0e17]">
+                திருமண அழைப்பிதழ்
+            </h2>
+
+            <div class="w-28 h-1 bg-[#d4af37] mx-auto mt-5 rounded-full"></div>
+
+        </div>
+
+        <!-- QUOTE -->
+
+        <div class="mx-6 mt-10 glass border border-amber-200 rounded-2xl p-7 text-center shadow">
+
+            <p class="italic text-[#4a0e17] leading-relaxed text-lg">
+                “அன்பும் அறனும் உடைத்தாயின் இல்வாழ்க்கையில்<br>
+                பண்பும் பயனும் அஃது.”
+            </p>
+
+        </div>
+
+        <!-- INVITATION -->
+
+        <div class="px-8 text-center mt-10 fade-up">
+
+            <p class="text-xl font-bold text-[#4a0e17]">
+                அன்புடையீர்,
+            </p>
+
+            <p class="text-sm leading-8 text-stone-700 mt-5">
+
+                இறைவன் திருவருள் துணைகொண்டு நடைபெறும்
+                எங்கள் இல்ல சுபமுகூர்த்த திருமண வைபவத்திற்கு
+                தாங்கள் தங்கள் குடும்பத்தினருடன் வருகை தந்து
+                மணமக்களை வாழ்த்தி அருளுமாறு அன்புடன்
+                அழைக்கின்றோம்.
+
+            </p>
+
+        </div>
+
+        <!-- GROOM -->
+
+        <div class="mx-6 mt-12 bg-gradient-to-b from-amber-50 to-white border-2 border-[#d4af37] rounded-2xl p-7 text-center shadow-xl fade-up">
+
+            <p class="text-xs font-bold text-[#4a0e17] uppercase tracking-widest">
+                திருநிறைச்செல்வன்
+            </p>
+
+            <h3 class="text-4xl font-bold text-[#4a0e17] mt-3">
+                செ. பிரதீசன்
+            </h3>
+
+            <p class="text-sm mt-5 text-stone-600 leading-7">
+                திரு. சி. செல்வராசா – திருமதி. ஜெ. விமலாவதி
+            </p>
+
+        </div>
+
+        <!-- HEART -->
+
+        <div class="flex justify-center items-center my-8">
+
+            <div class="w-16 h-[1px] bg-[#d4af37]"></div>
+
+            <i class="fa-solid fa-heart text-red-600 text-3xl mx-5 animate-pulse"></i>
+
+            <div class="w-16 h-[1px] bg-[#d4af37]"></div>
+
+        </div>
+
+        <!-- BRIDE -->
+
+        <div class="mx-6 bg-gradient-to-b from-amber-50 to-white border-2 border-[#d4af37] rounded-2xl p-7 text-center shadow-xl fade-up">
+
+            <p class="text-xs font-bold text-[#4a0e17] uppercase tracking-widest">
+                திருநிறைச்செல்வி
+            </p>
+
+            <h3 class="text-4xl font-bold text-[#4a0e17] mt-3">
+                தே. சஞ்ஜனா
+            </h3>
+
+            <p class="text-sm mt-5 text-stone-600 leading-7">
+                திரு. க. தேவராஜா – திருமதி. க. லெட்சுமி
+            </p>
+
+        </div>
+
+        <!-- DATE -->
+
+        <div class="bg-[#4a0e17] text-white mt-12 py-12 px-6 text-center border-y-4 border-[#d4af37] fade-up">
+
+            <h4 class="text-3xl font-bold text-[#d4af37]">
+                சுபமுகூர்த்த நாள்
+            </h4>
+
+            <div class="space-y-5 mt-8">
+
+                <div class="bg-black/20 p-5 rounded-2xl">
+
+                    <p class="text-sm text-[#d4af37]">
+                        தேதி
+                    </p>
+
+                    <p class="text-2xl font-bold mt-3">
+                        18.06.2026
+                    </p>
+
+                    <p class="text-sm mt-1">
+                        வியாழக்கிழமை
+                    </p>
+
+                </div>
+
+                <div class="bg-black/20 p-5 rounded-2xl">
+
+                    <p class="text-sm text-[#d4af37]">
+                        நேரம்
+                    </p>
+
+                    <p class="text-xl font-bold mt-3">
+                        காலை 10.30 - 11.30
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- COUNTDOWN -->
+
+        <div class="mt-12 px-6 text-center fade-up">
+
+            <h5 class="font-bold text-stone-500 mb-5 text-lg">
+                திருமண நாளுக்கான கவுண்ட்டவுன்
+            </h5>
+
+            <div class="grid grid-cols-4 gap-3">
+
+                <div class="bg-amber-50 p-4 rounded-2xl border shadow">
+                    <span id="days" class="block text-3xl font-bold text-[#4a0e17]">00</span>
+                    <span class="text-xs">நாட்கள்</span>
+                </div>
+
+                <div class="bg-amber-50 p-4 rounded-2xl border shadow">
+                    <span id="hours" class="block text-3xl font-bold text-[#4a0e17]">00</span>
+                    <span class="text-xs">மணி</span>
+                </div>
+
+                <div class="bg-amber-50 p-4 rounded-2xl border shadow">
+                    <span id="minutes" class="block text-3xl font-bold text-[#4a0e17]">00</span>
+                    <span class="text-xs">நிமிடம்</span>
+                </div>
+
+                <div class="bg-amber-50 p-4 rounded-2xl border shadow">
+                    <span id="seconds" class="block text-3xl font-bold text-[#4a0e17]">00</span>
+                    <span class="text-xs">நொடி</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- VENUE -->
+
+        <div class="mx-6 mt-12 border-2 border-[#4a0e17] rounded-2xl overflow-hidden shadow-2xl fade-up">
+
+            <div class="bg-[#4a0e17] py-5 text-center">
+
+                <h4 class="text-[#d4af37] text-2xl font-bold">
+                    திருமண இடம்
+                </h4>
+
+            </div>
+
+            <div class="p-7 text-center">
+
+                <div class="text-6xl float-animation">
+                    🏢
+                </div>
+
+                <h5 class="text-2xl font-bold mt-5">
+                    சனசமூக நிலையம்
+                </h5>
+
+                <p class="text-sm text-stone-600 mt-3 leading-7">
+                    3ம் குறுக்கு வீதி, அக்கரைப்பற்று 8/3
+                </p>
+
+                <p class="text-xs text-[#4a0e17] font-semibold bg-amber-50 py-2 px-4 rounded-lg border border-[#d4af37]"> 🍽️ திருமண வைபவத்தைத் தொடர்ந்து மதிய மங்கள விருந்துபசாரம் அதே இடத்தில் இடம்பெறும். </p>
+
+    <iframe
+        src="https://maps.google.com/maps?q=7.213444,81.850833&t=&z=17&ie=UTF8&iwloc=&output=embed"
+        width="100%"
+        height="250"
+        style="border:0;border-radius:12px;"
+        allowfullscreen=""
+        loading="lazy">
+    </iframe>
+
+            </div>
+
+        </div>
+<div class="mx-6 mt-12 bg-white border-2 border-[#d4af37] rounded-2xl p-7 shadow-xl">
+
+    <h4 class="text-center text-2xl font-bold text-[#4a0e17]">
+        RSVP
+    </h4>
+
+<form id="rsvpForm" class="space-y-4 mt-6">
+
+    <input type="text" placeholder="உங்கள் பெயர்"
+        class="w-full border rounded-xl p-3">
+
+    <input type="number" placeholder="வருபவர்கள் எண்ணிக்கை"
+        class="w-full border rounded-xl p-3">
+
+    <textarea placeholder="வாழ்த்து செய்தி"
+        class="w-full border rounded-xl p-3"></textarea>
+
+    <button type="submit"
+        class="w-full bg-[#4a0e17] text-[#d4af37] py-3 rounded-xl font-bold">
+        RSVP அனுப்பவும்
+    </button>
+
+</form>
+
+</div>
+        <!-- CONTACT -->
+
+        <div class="mt-14 text-center px-6 fade-up">
+
+            <h5 class="font-bold text-stone-500 text-lg">
+                தொடர்புகளுக்கு
+            </h5>
+
+            <div class="grid grid-cols-2 gap-4 mt-7">
+
+                <a href="tel:+94772059848"
+                    class="bg-amber-50 p-5 rounded-2xl border shadow hover:scale-105 transition">
+
+                    <p class="text-xs text-stone-500">
+                        மணமகன் குடும்பம்
+                    </p>
+
+                    <p class="font-bold text-[#4a0e17] mt-3">
+                        +94 76 660 9009
+                    </p>
+
+                </a>
+
+                <a href="tel:+94768622403"
+                    class="bg-amber-50 p-5 rounded-2xl border shadow hover:scale-105 transition">
+
+                    <p class="text-xs text-stone-500">
+                        மணமகள் குடும்பம்
+                    </p>
+
+                    <p class="font-bold text-[#4a0e17] mt-3">
+                        +94 76 862 2403
+                    </p>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MUSIC BUTTON -->
+
+    <div id="musicControlsGroup"
+        class="hidden fixed bottom-5 right-5 z-50">
+
+        <button id="musicToggle"
+            class="bg-[#4a0e17] text-[#d4af37] w-14 h-14 rounded-full border-2 border-[#d4af37] shadow-2xl flex items-center justify-center hover:scale-110 transition">
+
+            <i id="musicIcon" class="fa-solid fa-music text-lg"></i>
+
+        </button>
+
+    </div>
+
+    <!-- SCRIPT -->
+
+    <script>
+document
+.getElementById("rsvpForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    alert(
+        "உங்கள் RSVP வெற்றிகரமாக பெறப்பட்டது. நன்றி!"
+    );
+
+    this.reset();
+
+});
+        // LOADER
+
+        window.addEventListener('load', () => {
+
+            setTimeout(() => {
+
+                document.getElementById('loader')
+                    .style.display = 'none';
+
+            }, 1200);
+
+        });
+
+        // MUSIC
+
+        const music = document.getElementById('bgMusic');
+
+        const musicToggle =
+            document.getElementById('musicToggle');
+
+        const musicIcon =
+            document.getElementById('musicIcon');
+
+        // OPEN INVITATION
+
+        function openInvitation() {
+
+    const envelope = document.getElementById('envelopeScreen');
+    const mainContent = document.getElementById('mainContent');
+    const musicGroup = document.getElementById('musicControlsGroup');
+
+    music.play()
+        .then(() => {
+            musicIcon.className = "fa-solid fa-pause text-lg";
+        })
+        .catch(() => {
+            console.log("Autoplay blocked");
+        });
+
+    envelope.classList.add('flipped');
+
+    setTimeout(() => {
+
+        envelope.style.display = "none";
+
+        // SHOW MAIN CONTENT
+        mainContent.classList.remove('hidden');
+        mainContent.classList.remove('translate-y-10');
+        mainContent.classList.add('opacity-100', 'fade-up');
+
+        musicGroup.classList.remove('hidden');
+
+        startFlowerRain();
+        launchFireworks();
+        showWelcomePopup();
+
+    }, 1000);
+}
+
+        // MUSIC TOGGLE
+
+        musicToggle.addEventListener('click', () => {
+
+            if (music.paused) {
+
+                music.play();
+
+                musicIcon.className =
+                    "fa-solid fa-pause text-lg";
+
+            } else {
+
+                music.pause();
+
+                musicIcon.className =
+                    "fa-solid fa-music text-lg";
+
+            }
+
+        });
+
+        // FLOWERS
+
+        function startFlowerRain() {
+
+            const container =
+                document.getElementById('petalContainer');
+
+            const colors = [
+                '#ffccd5',
+                '#ffe5ec',
+                '#ffb7c5',
+                '#ffc2d1'
+            ];
+
+            setInterval(() => {
+
+                if (document.hidden) return;
+
+                const petal =
+                    document.createElement('div');
+
+                petal.classList.add('petal');
+
+                const size =
+                    Math.random() * 10 + 8;
+
+                petal.style.width = `${size}px`;
+
+                petal.style.height = `${size}px`;
+
+                petal.style.left =
+                    `${Math.random() * 100}vw`;
+
+                petal.style.backgroundColor =
+                    colors[Math.floor(
+                        Math.random() * colors.length
+                    )];
+
+                const duration =
+                    Math.random() * 4 + 6;
+
+                petal.style.animationDuration =
+                    `${duration}s`;
+
+                container.appendChild(petal);
+
+                setTimeout(() => {
+
+                    petal.remove();
+
+                }, duration * 1000);
+
+            }, 250);
+
+        }
+
+        // COUNTDOWN
+
+        const targetDate =
+            new Date("2026-06-18T10:30:00").getTime();
+
+        const countdown = setInterval(() => {
+
+            const now = new Date().getTime();
+
+            const difference =
+                targetDate - now;
+
+            if (difference <= 0) {
+
+                clearInterval(countdown);
+
+                return;
+            }
+
+            const days =
+                Math.floor(difference /
+                    (1000 * 60 * 60 * 24));
+
+            const hours =
+                Math.floor((difference %
+                    (1000 * 60 * 60 * 24))
+                    / (1000 * 60 * 60));
+
+            const minutes =
+                Math.floor((difference %
+                    (1000 * 60 * 60))
+                    / (1000 * 60));
+
+            const seconds =
+                Math.floor((difference %
+                    (1000 * 60))
+                    / 1000);
+
+            document.getElementById('days').innerText =
+                String(days).padStart(2, '0');
+
+            document.getElementById('hours').innerText =
+                String(hours).padStart(2, '0');
+
+            document.getElementById('minutes').innerText =
+                String(minutes).padStart(2, '0');
+
+            document.getElementById('seconds').innerText =
+                String(seconds).padStart(2, '0');
+
+        }, 1000);
+
+        //launchFireworks();
+         function showWelcomePopup(){
+    document.getElementById("welcomePopup")
+        .classList.remove("hidden");
+}
+
+function closePopup(){
+    document.getElementById("welcomePopup")
+        .classList.add("hidden");
+}
+
+// launch fireworks only
+function launchFireworks() {
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function createFirework(x, y) {
+        const colors = ["#ff0040", "#ffcc00", "#00e5ff", "#7cff00", "#ff66ff"];
+
+        const count = 60;
+
+        for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count;
+            const speed = random(2, 6);
+
+            particles.push({
+                x,
+                y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                alpha: 1,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                life: 0
+            });
+        }
+    }
+
+    function animate() {
+        ctx.fillStyle = "rgba(0,0,0,0.08)";
+        //ctx.fillStyle = "rgba(253, 251, 247, 0.25)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+
+            p.vy += 0.05; // gravity
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha -= 0.01;
+            p.life++;
+
+            ctx.beginPath();
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = p.color;
+            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (p.alpha <= 0) {
+                particles.splice(i, 1);
+            }
+        }
+
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(animate);
+    }
+
+    // start animation loop
+    animate();
+
+    // auto spawn fireworks
+    let count = 0;
+    const interval = setInterval(() => {
+        createFirework(
+            random(canvas.width * 0.2, canvas.width * 0.8),
+            random(canvas.height * 0.2, canvas.height * 0.6)
+        );
+
+        count++;
+        if (count > 12) clearInterval(interval);
+    }, 400);
+}
+
+    </script>
+
+</body>
+
+</html><!DOCTYPE html>
+<html lang="ta">
 
 <head>
     <meta charset="UTF-8">
