@@ -545,11 +545,21 @@ style="position: relative; z-index: 10;">
     <textarea id="rsvpMessage" placeholder="வாழ்த்து செய்தி"
         class="w-full border rounded-xl p-3"></textarea>
 
+        <select id="familySelect"
+    class="w-full border rounded-xl p-3">
+
+    <option value="groom">மணமகன் குடும்பம்</option>
+
+    <option value="bride">மணமகள் குடும்பம்</option>
+
+</select>
+
         <button type="button"
-            onclick="sendRSVP('groom')"
+            onclick="sendRSVP()"
             class="w-full bg-[#4a0e17] text-[#d4af37] py-3 rounded-xl font-bold">
             RSVP அனுப்பவும்
         </button>
+        
 
 </form>
 
@@ -613,11 +623,19 @@ style="position: relative; z-index: 10;">
     <!-- SCRIPT -->
 
     <script>
-function sendRSVP(family) {
+function sendRSVP() {
 
-    const name = document.getElementById('rsvpName').value.trim();
-    const count = document.getElementById('rsvpCount').value;
-    const userMsg = document.getElementById('rsvpMessage').value.trim();
+    const family =
+        document.getElementById('familySelect').value;
+
+    const name =
+        document.getElementById('rsvpName').value.trim();
+
+    const count =
+        document.getElementById('rsvpCount').value;
+
+    const userMsg =
+        document.getElementById('rsvpMessage').value.trim();
 
     if (!name) {
         alert("தயவுசெய்து உங்கள் பெயரை உள்ளிடவும்!");
@@ -627,7 +645,10 @@ function sendRSVP(family) {
     const groomPhone = "94766609009";
     const bridePhone = "94762964481";
 
-    const targetPhone = family === 'groom' ? groomPhone : bridePhone;
+    const targetPhone =
+        family === 'groom'
+        ? groomPhone
+        : bridePhone;
 
     let message = `வணக்கம்! 🌸\n`;
     message += `நான் *${name}*.\n`;
@@ -640,10 +661,11 @@ function sendRSVP(family) {
 
     message += `\nநன்றி! 🙏`;
 
-    const encodedMessage = encodeURIComponent(message);
+    const encodedMessage =
+        encodeURIComponent(message);
 
     window.open(
-        `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodedMessage}`,
+        `https://wa.me/${targetPhone}?text=${encodedMessage}`,
         '_blank'
     );
 }
